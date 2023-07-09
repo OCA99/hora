@@ -244,7 +244,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for PQIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: PQIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data).unwrap().into_bytes())).unwrap();
+        let mut instance: PQIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data)?.into_bytes()))?;
         instance._nodes = instance
             ._nodes_tmp
             .iter()
@@ -485,7 +485,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for IVFPQIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: IVFPQIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data).unwrap().into_bytes())).unwrap();
+        let mut instance: IVFPQIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data)?.into_bytes())).unwrap();
         instance._nodes = instance
             ._nodes_tmp
             .iter()
