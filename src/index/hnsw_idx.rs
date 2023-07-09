@@ -16,7 +16,7 @@ use std::collections::BinaryHeap;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs::File;
-use std::io::Write;
+use std::io::{Cursor, Write};
 
 use std::sync::RwLock;
 
@@ -645,7 +645,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for HNSWIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(String::from_utf8(data)?).unwrap();
+        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data)?.into_bytes())).unwrap();
         instance._nodes = instance
             ._nodes_tmp
             .iter()
