@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 
 use std::fs::File;
 
-use std::io::Write;
+use std::io::{Cursor, Write};
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct PQIndex<E: node::FloatElement, T: node::IdxType> {
@@ -243,9 +243,8 @@ impl<E: node::FloatElement, T: node::IdxType> ann_index::ANNIndex<E, T> for PQIn
 impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwned>
     ann_index::SerializableIndex<E, T> for PQIndex<E, T>
 {
-    fn load(path: &str) -> Result<Self, &'static str> {
-        let file = File::open(path).unwrap_or_else(|_| panic!("unable to open file {:?}", path));
-        let mut instance: PQIndex<E, T> = bincode::deserialize_from(&file).unwrap();
+    fn load(data: Vec<u8>) -> Result<Self, &'static str> {
+        let mut instance: PQIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data)?.into_bytes())).unwrap();
         instance._nodes = instance
             ._nodes_tmp
             .iter()
@@ -254,13 +253,10 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
         Ok(instance)
     }
 
-    fn dump(&mut self, path: &str) -> Result<(), &'static str> {
+    fn dump(&mut self) -> Result<Vec<u8>, &'static str> {
         self._nodes_tmp = self._nodes.iter().map(|x| *x.clone()).collect();
         let encoded_bytes = bincode::serialize(&self).unwrap();
-        let mut file = File::create(path).unwrap();
-        file.write_all(&encoded_bytes)
-            .unwrap_or_else(|_| panic!("unable to write file {:?}", path));
-        Result::Ok(())
+        Result::Ok(encoded_bytes)
     }
 }
 
