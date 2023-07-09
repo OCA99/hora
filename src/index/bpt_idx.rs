@@ -606,7 +606,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for BPTIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: BPTIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data).into_bytes())).unwrap();
+        let mut instance: BPTIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data).unwrap().into_bytes())).unwrap();
 
         for i in 0..instance.leaves.len() {
             instance.leaves[i].node =
