@@ -4,7 +4,7 @@ use crate::core::metrics;
 use crate::core::neighbor::Neighbor;
 use crate::core::node;
 use crate::index::hnsw_params::HNSWParams;
-use crate::into_iter;
+use crate::{into_iter, vec_iter};
 use fixedbitset::FixedBitSet;
 use rand::prelude::*;
 #[cfg(not(feature = "no_thread"))]
@@ -645,7 +645,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for HNSWIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(&data).unwrap();
+        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(String::from_utf8(data)).unwrap();
         instance._nodes = instance
             ._nodes_tmp
             .iter()
