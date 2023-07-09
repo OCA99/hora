@@ -144,7 +144,7 @@ pub trait SerializableIndex<
 >: Send + Sync + ANNIndex<E, T>
 {
     /// load file with path
-    fn load(_path: &str) -> Result<Self, &'static str>
+    fn load(data: Vec<u8>) -> Result<Self, &'static str>
     where
         Self: Sized,
     {
@@ -152,7 +152,7 @@ pub trait SerializableIndex<
     }
 
     /// dump the file into the path
-    fn dump(&mut self, _path: &str) -> Result<(), &'static str> {
+    fn dump(&mut self) -> Result<&'static str, &'static str> {
         Err("empty implementation")
     }
 }
