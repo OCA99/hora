@@ -645,12 +645,7 @@ impl<E: node::FloatElement + DeserializeOwned, T: node::IdxType + DeserializeOwn
     ann_index::SerializableIndex<E, T> for HNSWIndex<E, T>
 {
     fn load(data: Vec<u8>) -> Result<Self, &'static str> {
-        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(Cursor::new(String::from_utf8(data)
-            .map_err(|e| {
-                eprintln!("load error: {:?}", e);
-                "load error"
-            })?
-            .into_bytes())).unwrap();
+        let mut instance: HNSWIndex<E, T> = bincode::deserialize_from(Cursor::new(data)).unwrap();
         instance._nodes = instance
             ._nodes_tmp
             .iter()
