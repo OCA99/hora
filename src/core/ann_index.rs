@@ -152,7 +152,7 @@ pub trait SerializableIndex<
     }
 
     /// dump the file into the path
-    fn dump(&mut self) -> Result<&'static str, &'static str> {
+    fn dump(&mut self) -> Result<Vec<u8>, &'static str> {
         Err("empty implementation")
     }
 }
